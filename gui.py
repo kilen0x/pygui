@@ -3,30 +3,31 @@ import pygame as pg
 
 
 class Selector:
-        def __init__(self, x, y, width, height, font, color, text = "", view = None, textColor = (255,255,255)):
-            o = len(text) // 15 + 1
-            if o != 0:
-                height *= o
-            self.rect = pg.Rect(x,y,width,height)
-            self.view = view
-            self.color = color
-            self.font = font
-            self.textcolor = textColor
-            
-            ## text ##
-            self.textpos = (self.rect.x+10, self.rect.y +5)
-            p = 0
-            orig = [""]
-            f = 0
-            for i in text:
-                if p % 16 == 0 and p != 0:
-                    orig.append("")
-                    f += 1
-                    orig[f] += i
-                else:
-                    orig[f] += i
-                p += 1
-            self.text = orig
+    def __init__(self, x, y, width, height, font, color, text = "", view = None, textColor = (255,255,255)):
+        o = len(text) // 15 + 1
+        if o != 0:
+            height *= o
+        self.rect = pg.Rect(x,y,width,height)
+        self.view = view
+        self.color = color
+        self.truecolor = color
+        self.font = font
+        self.textcolor = textColor
+        
+        ## text ##
+        self.textpos = (self.rect.x+10, self.rect.y +5)
+        p = 0
+        orig = [""]
+        f = 0
+        for i in text:
+            if p % 16 == 0 and p != 0:
+                orig.append("")
+                f += 1
+                orig[f] += i
+            else:
+                orig[f] += i
+            p += 1
+        self.text = orig
 
 class Gui:
 
@@ -39,6 +40,8 @@ class Gui:
 
         self.sW = SCREEN_WIDTH
         self.sH = SCREEN_HEIGHT
+        self.selectorY = 0
+        self.onSelectors = False
         self.fS = 30
         self.selectors = []
         self.selectorspages = []
@@ -59,8 +62,19 @@ class Gui:
         self.selector_color = (80,80,80)
 
     def update(self):
-        ...
+        print(self.selectorY)
+        mouse = pg.mouse
+        for selector in self.selectors:
+            if selector.rect.collidepoint(mouse.get_pos()[0], mouse.get_pos()[1]):
+                selector.color = (20,20,20)
+
+            else:
+                selector.color = selector.truecolor
         
+        if self.frame_1.collidepoint(mouse.get_pos()[0], mouse.get_pos()[1]):
+            self.onSelectors = True
+        else:
+            self.onSelectors = False
 
     def draw(self):
 
@@ -88,7 +102,32 @@ class Gui:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 quit()
+            if event.type == pg.MOUSEWHEEL:
+                if self.onSelectors:
 
+                    evy = event.y 
+
+                    if evy == 1: self.selectorY -= 1
+                    elif evy == -1: self.selectorY += 1
+                    
+                    if event.y == 1 and self.selectorY < 0:
+                        self.selectorY += 1
+                        return
+            
+                    if event.y == -1 and self.selectorY == len(self.selectors):
+                        self.selectorY -= 1
+                        return
+        
+
+                    for selector in self.selectors:
+                        if evy == 1:
+                            selector.rect.y += 150
+                            a = [selector.textpos[0], selector.textpos[1] + 150]
+                            selector.textpos = a
+                        else:
+                            selector.rect.y -= 150
+                            a = [selector.textpos[0], selector.textpos[1] - 150]
+                            selector.textpos = a
     def main_loop(self):
         while True:
             self.update()
