@@ -4,7 +4,7 @@ import pygame as pg
 
 class Selector:
     def __init__(self, x, y, width, height, font, color, text = "", view = None, textColor = (255,255,255)):
-        o = len(text) // 15 + 1
+        o = len(text) // 15
         if o != 0:
             height *= o
         self.rect = pg.Rect(x,y,width,height)
