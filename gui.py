@@ -12,6 +12,7 @@ class IconExcept(Exception):
         pass
 
 class Selector:
+<<<<<<< HEAD
     def __init__(self,screenW, x, y, width, height, font, color, text = "", view = None, textColor = (255,255,255)):
         f = screenW // 102
         o = len(text) // f + 1
@@ -72,6 +73,10 @@ class Label:
     def __init__(self,screenW, x, y, width, height, font, color, text = "", view = None, textColor = (255,255,255)):
         t = screenW // 17.3
         o = len(text) // t + 1
+=======
+    def __init__(self, x, y, width, height, font, color, text = "", view = None, textColor = (255,255,255)):
+        o = len(text) // 15
+>>>>>>> 6ee97553f001fa34f6295b82911ec5433c9cb6e9
         if o != 0:
             height *= o
         self.rect = pg.Rect(x,y,width,height)
